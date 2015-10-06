@@ -51,7 +51,7 @@ public class MainActivity extends Activity
 
 	// private AudioManager mAudioManager;
 
-	private Button btnRecord, btnStop, btnExit;
+	private Button btnRecord,/* btnStop,*/ btnExit;
 	// 缓冲区字节大小
 	private int recordBuffSize, playBuffSize;
 	private boolean isRecording;
@@ -123,11 +123,11 @@ public class MainActivity extends Activity
 				 AudioTrack.MODE_STREAM);
 
 		btnRecord = (Button) this.findViewById(R.id.btnRecord);
-		btnStop = (Button) this.findViewById(R.id.btnStop);
+		//btnStop = (Button) this.findViewById(R.id.btnStop);
 		btnExit = (Button) this.findViewById(R.id.btnExit);
 
 		btnRecord.setOnClickListener(new ClickEvent());
-		btnStop.setOnClickListener(new ClickEvent());
+		//btnStop.setOnClickListener(new ClickEvent());
 		btnExit.setOnClickListener(new ClickEvent());
 
 		bluetoothStatus();
@@ -238,14 +238,26 @@ public class MainActivity extends Activity
 		{
 			if (v == btnRecord)
 			{
-				isRecording = true;
-				mRecordPlayThread = new RecordPlayThread();
-				// 开一条线程边录边放
-				mRecordPlayThread.start();
-			} else if (v == btnStop)
+				if(!isConnectBluetooth)
+				{
+					tos.setText("未连接蓝牙");
+					tos.show();
+					return;
+				}
+				isRecording = !isRecording;
+				if(isRecording)
+				{
+					btnRecord.setText("停止");
+					mRecordPlayThread = new RecordPlayThread();
+					// 开一条线程边录边放
+					mRecordPlayThread.start();
+				}else {
+					btnRecord.setText("录音");
+				}
+			} /*else if (v == btnStop)
 			{
 				isRecording = false;
-			} else if (v == btnExit)
+			}*/ else if (v == btnExit)
 			{
 				isRecording = false;
 				MainActivity.this.finish();
@@ -290,8 +302,9 @@ public class MainActivity extends Activity
 				//提示
 				if(!isConnectBluetooth)
 				{
-					tos.setText("未连接蓝牙设备");
-					tos.show();
+					Log.e(TAG,"未连接蓝牙设备");
+					//tos.setText("未连接蓝牙设备");
+					//tos.show();
 				}			
 				// 停止录音和播放
 				mAudioTrack.stop();
@@ -357,9 +370,10 @@ public class MainActivity extends Activity
 	@Override
 	protected void onDestroy()
 	{
-		super.onDestroy();
+		super.onDestroy();		
 		isRecording = false;
 		unregisterReceiver();
+		android.os.Process.killProcess(android.os.Process.myPid());  
 	}
 
 }

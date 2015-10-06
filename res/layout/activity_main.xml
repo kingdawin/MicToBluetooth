@@ -9,12 +9,12 @@
         android:text="开始边录边放" >
     </Button>
 
-    <Button
+    <!-- <Button
         android:id="@+id/btnStop"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="停止" >
-    </Button>
+    </Button> -->
 
     <Button
         android:id="@+id/btnExit"

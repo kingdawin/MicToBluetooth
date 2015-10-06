@@ -52,10 +52,12 @@ public class MainActivity extends Activity
 	// private AudioManager mAudioManager;
 
 	private Button btnRecord, btnStop, btnExit;
+	// 缓冲区字节大小
 	private int recordBuffSize, playBuffSize;
 	private boolean isRecording;
 	/**是否连接蓝牙*/
 	private boolean isConnectBluetooth;
+	
 	// 采集音频的api是android.media.AudioRecord类
 	// 在Android中录音可以用MediaRecord录音，操作比较简单。
 	// 但是不够专业，就是不能对音频进行处理。如果要进行音频的实时的处理或者音频的一些封装
@@ -72,8 +74,7 @@ public class MainActivity extends Activity
 	private int channelConfig = AudioFormat.CHANNEL_IN_STEREO;
 	// 音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
 	private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
-	// 缓冲区字节大小
-	private int bufferSizeInBytes;
+
 
 	private Receiver mReceiver;
 	private IntentFilter intentFilter;
@@ -99,7 +100,7 @@ public class MainActivity extends Activity
 		// getSystemService(Context.AUDIO_SERVICE);
 
 		// 获得缓冲区字节大小
-		recordBuffSize = bufferSizeInBytes = AudioRecord.getMinBufferSize(
+		recordBuffSize = AudioRecord.getMinBufferSize(
 				sampleRateInHz,
 				channelConfig,
 				audioFormat);
@@ -113,7 +114,7 @@ public class MainActivity extends Activity
 				 44100,
 				 AudioFormat.CHANNEL_IN_STEREO,
 				 AudioFormat.ENCODING_PCM_16BIT,
-				 bufferSizeInBytes);
+				 recordBuffSize);
 		mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
 				 44100,
 				 AudioFormat.CHANNEL_IN_STEREO, 
@@ -130,7 +131,7 @@ public class MainActivity extends Activity
 		btnExit.setOnClickListener(new ClickEvent());
 
 		bluetoothStatus();
-		System.out.println("AudioRecord.getMinBufferSize=" + bufferSizeInBytes);
+		System.out.println("AudioRecord.getMinBufferSize=" + recordBuffSize);
 		registerReceiver();
 	}
 
@@ -152,9 +153,9 @@ public class MainActivity extends Activity
 		} else
 		{
 			// registerReceiver();
-			mAdapter.getProfileProxy(this, mProfileListener,
+			mAdapter.getProfileProxy(this,
+					mProfileListener,
 					BluetoothProfile.A2DP);
-
 			// 找不到配对的蓝牙
 			if (Device == null)
 			{
@@ -162,7 +163,6 @@ public class MainActivity extends Activity
 				Log.v(TAG, "[BluetoothService]onCreate()  [mDevice is NULL]");
 			}
 		}
-
 	}
 
 	@SuppressLint("NewApi")

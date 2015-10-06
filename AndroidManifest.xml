@@ -11,9 +11,9 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" >
     </uses-permission>
     <!-- 蓝牙权限 -->
-    <!-- 使用蓝牙设备的权限 -->
+    <!-- 使用蓝牙设备的权限: Allows applications to connect to paired bluetooth devices -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <!-- 管理蓝牙设备的权限 -->
+    <!-- 管理蓝牙设备的权限 :Allows applications to discover and pair bluetooth devices -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
